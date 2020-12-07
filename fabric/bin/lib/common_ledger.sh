@@ -112,7 +112,7 @@ ledger_init() {
     try rm -rf ${FABRIC_STATE_DIR}/*
 
     # 2. start orderer
-    ORDERER_GENERAL_GENESISPROFILE=SampleDevModeSolo ${ORDERER_CMD} 1>${ORDERER_LOG_OUT} 2>${ORDERER_LOG_ERR} &
+    ORDERER_GENERAL_GENESISPROFILE=SampleDevModeEtcdRaft ${ORDERER_CMD} 1>${ORDERER_LOG_OUT} 2>${ORDERER_LOG_ERR} &
     export ORDERER_PID=$!
     echo "${ORDERER_PID}" > ${ORDERER_PID_FILE}
     sleep 1
@@ -123,12 +123,13 @@ ledger_init() {
 		   ${PEER_CMD} node start 1>${PEER_LOG_OUT} 2>${PEER_LOG_ERR} &
     export PEER_PID=$!
     echo "${PEER_PID}" > ${PEER_PID_FILE}
+	echo "$CHAN_ID"
     sleep 1
     kill -0 ${PEER_PID} || die "Peer quit too quickly: (for log see ${PEER_LOG_OUT} & ${PEER_LOG_ERR})"
 
     # 4. Setup channel
     # - create channel tx
-    try ${CONFIGTXGEN_CMD} -channelID ${CHAN_ID} -profile SampleSingleMSPChannel -outputCreateChannelTx ${CHANNEL_TX}
+    try ${CONFIGTXGEN_CMD} -channelID ${CHAN_ID} -profile SampleRaftMSPChannel -outputCreateChannelTx ${CHANNEL_TX}
     # - create genesis block, only by one peer
     try ${PEER_CMD} channel create -o ${ORDERER_ADDR} -c ${CHAN_ID} -f ${CHANNEL_TX} --outputBlock ${CHANNEL_BLOCK}
     # - every peer will have to join (after having received mychannel.block out-of-band)

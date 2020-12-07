@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
+echo "$SCRIPT_DIR"
 . ${SCRIPT_DIR}/lib/common.sh
 
 # remove previous crypto material and config transactions
@@ -23,14 +23,14 @@ fi
 mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com_sk
 
 #generate channel configuration transaction
-configtxgen -profile OneOrgChannel -outputCreateChannelTx ${FABRIC_CFG_PATH}/config/channel.tx -channelID ${CHANNEL_NAME}
+configtxgen -profile SampleRaftMSPChannel -outputCreateChannelTx ${FABRIC_CFG_PATH}/config/channel.tx -channelID ${CHANNEL_NAME}
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
 fi
 
 #generate genesis block for orderer
-configtxgen -profile OneOrgOrdererGenesis -outputBlock ${FABRIC_CFG_PATH}/config/genesis.block
+configtxgen -profile SampleDevModeEtcdRaft -outputBlock ${FABRIC_CFG_PATH}/config/genesis.block
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate orderer genesis block..."
   exit 1

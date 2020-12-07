@@ -12,6 +12,7 @@ PROJECT_NAME=fabric-private-chaincode
 
 export SGX_MODE ?= HW
 export SGX_BUILD ?= PRERELEASE
+export FPC_ATTESTATION_TYPE = epid_linkable
 
 export FABRIC_PATH ?= ${GOPATH}/src/github.com/hyperledger/fabric
 

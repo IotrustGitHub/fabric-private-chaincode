@@ -7,10 +7,11 @@
 #
 
 export PATH=${SCRIPT_DIR}/../bin:${PWD}:$PATH
+echo "$SCRIPT_DIR"
 export FABRIC_CFG_PATH=${SCRIPT_DIR}/../network-config
 
 # Variables which we allow the caller override ..
-export FABRIC_VERSION=${FABRIC_VERSION:=1.4.3}
+export FABRIC_VERSION=${FABRIC_VERSION:=1.4.4}
 export CHANNEL_NAME=${CHANNEL_NAME:=mychannel}
 export NODE_WALLETS=${NODE_WALLETS:=${SCRIPT_DIR}/../node-sdk/wallet}
 export DOCKER_COMPOSE_OPTS=${DOCKER_COMPOSE_OPTS:=}

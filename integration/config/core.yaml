@@ -19,12 +19,12 @@ peer:
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
-    listenAddress: 0.0.0.0:7051
+    listenAddress: 0.0.0.0:8051
 
     # The endpoint this peer uses to listen for inbound chaincode connections.
     # If this is commented-out, the listen address is selected to be
     # the peer's address (see below) with port 7052
-    chaincodeListenAddress: 0.0.0.0:7052 # Note: we uncommented it to make working with our dev docker image
+    chaincodeListenAddress: 0.0.0.0:8052 # Note: we uncommented it to make working with our dev docker image
 
     # The endpoint the chaincode for this peer uses to connect to the peer.
     # If this is not specified, the chaincodeListenAddress address is selected.
@@ -36,7 +36,7 @@ peer:
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: 127.0.0.1:7051 # Note: setting to 127.0.0.1 restricts to localhost but does make it work behind proxies
+    address: 0.0.0.0:8051 # Note: setting to 127.0.0.1 restricts to localhost but does make it work behind proxies
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -231,11 +231,11 @@ peer:
     # not mutual TLS auth. See comments on chaincodeListenAddress for more info
     tls:
         # Require server-side TLS
-        enabled:  false
+        enabled:  true
         # Require client certificates / mutual TLS.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
-        clientAuthRequired: false
+        clientAuthRequired: true
         # X.509 certificate used for TLS server
         cert:
             file: tls/server.crt
@@ -448,7 +448,7 @@ vm:
     # settings for docker vms
     docker:
         tls:
-            enabled: false
+            enabled: true
             ca:
                 file: docker/ca.crt
             cert:
