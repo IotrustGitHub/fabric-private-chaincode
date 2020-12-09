@@ -81,7 +81,7 @@ RUN mkdir /tmp/build-src
 COPY . /tmp/build-src
 # Note: could add --single-branch to below to speed-up and keep size smaller. But for now for a dev-image better keep complete repo
 # RUN mkdir -p $FPC_PATH
-RUN git clone --branch $FPC_REPO_BRANCH $FPC_REPO_URL $FPC_PATH
+RUN git clone -b $FPC_REPO_BRANCH $FPC_REPO_URL $FPC_PATH
 RUN cd $FPC_PATH
 # COPY ./ /project/src/github.com/hyperledger-labs/fabric-private-chaincode
 
