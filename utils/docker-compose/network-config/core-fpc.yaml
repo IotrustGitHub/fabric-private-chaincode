@@ -40,7 +40,7 @@ peer:
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
-    addressAutoDetect: false
+    addressAutoDetect: true
 
     # Setting for runtime.GOMAXPROCS(n). If n < 1, it does not change the
     # current setting
@@ -238,18 +238,18 @@ peer:
         clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
-            file: tls/server.crt
+            file: /etc/hyperledger/tls/server.crt
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: tls/server.key
+            file: /etc/hyperledger/tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: tls/ca.crt
+            file: /etc/hyperledger/tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - tls/ca.crt
+              - /etc/hyperledger/tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
@@ -309,7 +309,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: Org1MSP
+    localMspId: Org1
 
     # CLI common client config options
     client:
@@ -588,7 +588,7 @@ chaincode:
     # Logging section for the chaincode container
     logging:
       # Default level for all loggers within the chaincode container
-      level:  debug
+      level:  info
       # Override default level for the 'shim' logger
       shim:   info
       # Format for the chaincode container logs

@@ -30,7 +30,7 @@ General:
 
     # TLS: TLS settings for the GRPC server.
     TLS:
-        Enabled: false
+        Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
         PrivateKey: tls/server.key
         # Certificate governs the file location of the server TLS certificate.
@@ -89,7 +89,7 @@ General:
     # GenesisMethod is set to "provisional". See the configtx.yaml file for the
     # descriptions of the available profiles. Ignored if GenesisMethod is set to
     # "file".
-    GenesisProfile: SampleInsecureSolo
+    GenesisProfile: SampleDevModeEtcdRaft
 
     # Genesis file: The file containing the genesis block to use when
     # initializing the orderer system channel and GenesisMethod is set to
@@ -106,7 +106,7 @@ General:
     # ID of one of the organizations defined in the orderer system channel's
     # /Channel/Orderer configuration. The sample organization defined in the
     # sample configuration provided has an MSP ID of "SampleOrg".
-    LocalMSPID: SampleOrg
+    LocalMSPID: Org1
 
     # Enable an HTTP service for Go "pprof" profiling as documented at:
     # https://golang.org/pkg/net/http/pprof

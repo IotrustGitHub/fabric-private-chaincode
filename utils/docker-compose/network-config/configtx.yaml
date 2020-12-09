@@ -74,7 +74,13 @@ Organizations:
         # OrdererEndpoints is a list of all orderers this org runs which clients
         # and peers may to connect to to push transactions and receive blocks respectively.
         OrdererEndpoints:
-            - "127.0.0.1:7050"
+            - "orderer0.example.com:7050"
+            - "orderer1.example.com:7050"
+            - "orderer2.example.com:7050"
+            - "orderer3.example.com:7050"
+            - "orderer4.example.com:7050"
+            - "orderer5.example.com:7050"
+            - "orderer6.example.com:7050"
 
         # AnchorPeers defines the location of peers which can be used for
         # cross-org gossip communication. Note, this value is only encoded in

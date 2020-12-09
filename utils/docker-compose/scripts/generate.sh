@@ -22,6 +22,8 @@ fi
 
 mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com_sk
 
+mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/key.pem
+
 #generate channel configuration transaction
 configtxgen -profile SampleRaftMSPChannel -outputCreateChannelTx ${FABRIC_CFG_PATH}/config/channel.tx -channelID ${CHANNEL_NAME}
 if [ "$?" -ne 0 ]; then
@@ -30,7 +32,7 @@ if [ "$?" -ne 0 ]; then
 fi
 
 #generate genesis block for orderer
-configtxgen -profile SampleDevModeEtcdRaft -outputBlock ${FABRIC_CFG_PATH}/config/genesis.block
+configtxgen -profile SampleDevModeEtcdRaft -outputBlock ${FABRIC_CFG_PATH}/config/${CHANNEL_NAME}.block
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate orderer genesis block..."
   exit 1

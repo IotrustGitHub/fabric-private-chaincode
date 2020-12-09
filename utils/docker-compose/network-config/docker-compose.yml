@@ -26,15 +26,16 @@ networks:
   basic:
 
 services:
-  ca.example.com:
+  ca.org1.example.com:
     extends:
       file: base/base.yaml
       service: ca-base
-    container_name: ca.example.com
+    container_name: ca.org1.example.com
     ports:
       - "7054:7054"
     volumes:
       - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./crypto-config/peerOrganizations/org1.example.com/tlsca/:/etc/hyperledger/fabric-ca-server-tls
     networks:
       - basic
 
@@ -45,7 +46,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -65,6 +66,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer1.example.com:
     container_name: orderer1.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -72,7 +75,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -92,6 +95,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer2.example.com:
     container_name: orderer2.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -99,7 +104,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -119,6 +124,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer3.example.com:
     container_name: orderer3.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -126,7 +133,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -146,6 +153,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer4.example.com:
     container_name: orderer4.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -153,7 +162,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -173,6 +182,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer5.example.com:
     container_name: orderer5.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -180,7 +191,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -200,6 +211,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
   orderer6.example.com:
     container_name: orderer6.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
@@ -207,7 +220,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/${CHANNEL_NAME}.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -227,6 +240,8 @@ services:
         - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
     networks:
       - basic
+    depends_on:
+      - ca.org1.example.com
 
   peer0.org1.example.com:
     extends:
@@ -236,8 +251,11 @@ services:
     container_name: peer0.org1.example.com
     environment:
       - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID=Org1
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       # we set here credentials to admin, so we don't have to explicitly have to set
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
@@ -248,7 +266,9 @@ services:
       - 7053:7053
     volumes:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/tls
         - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peer
         - ./core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
     depends_on:
       - orderer0.example.com

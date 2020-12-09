@@ -326,29 +326,31 @@ handle_channel_join() {
     CHAN_ID=$(basename -s .block ${CHAN_BLOCK}) || die "Cannot derive channel id from block param '$CHAN_BLOCK}'"
     yell "Deriving channel id '${CHAN_ID}' from channel block file '${CHAN_BLOCK}', relying on naming convention '..../<chan_id>.block' for that file!"
 
+	CHAN_ID="mychannel"
+
     # - call real peer so channel is joined
     try $RUN ${FABRIC_BIN_DIR}/peer "${ARGS_EXEC[@]}"
 
     # - handle ercc
-    say "Installing & Instantiating ercc on channel '${CHAN_ID}' ..."
+    say "Installing & Instantiating ercc on channel '${CHANNEL_NAME}' ..."
     #   - install ercc
     try $RUN ${FABRIC_BIN_DIR}/peer chaincode install -n ${ERCC_ID} -v ${ERCC_VERSION} -p github.com/hyperledger-labs/fabric-private-chaincode/ercc/cmd
     sleep 1
     #   - instantiate ercc iff "channel creation" peer
-    if [ -e "${FABRIC_STATE_DIR}/${CHAN_ID}.creator" ]; then
-	try $RUN ${FABRIC_BIN_DIR}/peer chaincode instantiate -n ${ERCC_ID} -v ${ERCC_VERSION} -c '{"args":["init"]}' -C ${CHAN_ID} -V ercc-vscc
+    if [ -e "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator" ]; then
+	try $RUN ${FABRIC_BIN_DIR}/peer chaincode instantiate -n ${ERCC_ID} -v ${ERCC_VERSION} -c '{"args":["init"]}' -C ${CHANNEL_NAME} -V ercc-vscc
 	sleep 4
-	try rm "${FABRIC_STATE_DIR}/${CHAN_ID}.creator"
+	try rm "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator"
     fi
     #   - get SPID (mostly as debug output)
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHAN_ID}
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME}
     sleep 3
 
     # - ask tlcc to join channel
     #   IMPORTANT: right now a join is _not_ persistant, so on restart of peer,
     #   it will re-join old channels but tlcc will not!
-    say "Attaching TLCC to channel '${CHAN_ID}' ..."
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHAN_ID}
+    say "Attaching TLCC to channel '${CHANNEL_NAME}' ..."
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHANNEL_NAME}
 
     # - exit
     exit 0
