@@ -334,23 +334,26 @@ handle_channel_join() {
     # - handle ercc
     say "Installing & Instantiating ercc on channel '${CHANNEL_NAME}' ..."
     #   - install ercc
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode install -n ${ERCC_ID} -v ${ERCC_VERSION} -p github.com/hyperledger-labs/fabric-private-chaincode/ercc/cmd
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode install -n ${ERCC_ID} -v ${ERCC_VERSION} -p github.com/hyperledger-labs/fabric-private-chaincode/ercc/cmd --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+
     sleep 1
     #   - instantiate ercc iff "channel creation" peer
     if [ -e "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator" ]; then
-	try $RUN ${FABRIC_BIN_DIR}/peer chaincode instantiate -n ${ERCC_ID} -v ${ERCC_VERSION} -c '{"args":["init"]}' -C ${CHANNEL_NAME} -V ercc-vscc
+	try $RUN ${FABRIC_BIN_DIR}/peer chaincode instantiate -n ${ERCC_ID} -v ${ERCC_VERSION} -c '{"args":["init"]}' -C ${CHANNEL_NAME} -V ercc-vscc --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050 
 	sleep 4
 	try rm "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator"
     fi
     #   - get SPID (mostly as debug output)
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME}
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+
     sleep 3
 
     # - ask tlcc to join channel
     #   IMPORTANT: right now a join is _not_ persistant, so on restart of peer,
     #   it will re-join old channels but tlcc will not!
     say "Attaching TLCC to channel '${CHANNEL_NAME}' ..."
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHANNEL_NAME}
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+
 
     # - exit
     exit 0
