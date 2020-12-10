@@ -281,3 +281,42 @@ services:
       - orderer6.example.com
     networks:
       - basic
+
+  peer1.org1.example.com:
+    extends:
+      file: base/base.yaml
+      service: peer-base
+    image: hyperledger/fabric-peer${FPC_CONFIG}
+    container_name: peer1.org1.example.com
+    environment:
+      - CORE_PEER_ID=peer1.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
+      # we set here credentials to admin, so we don't have to explicitly have to set
+      # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
+      # also will run with admin and not peer credentials. If that gives problems, e.g.,
+      # because of role-specific endorsement policies, you will have to comment below
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+    ports:
+      - 7061:7051
+      - 7063:7053
+    volumes:
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/tls
+        - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/etc/hyperledger/msp/peer
+        - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
+        - ./core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
+    depends_on:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com
+      - orderer3.example.com
+      - orderer4.example.com
+      - orderer5.example.com
+      - orderer6.example.com
+    networks:
+      - basic
