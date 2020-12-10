@@ -155,7 +155,7 @@ handle_chaincode_instantiate() {
 	    die "'function' not supported for init arguments, put all arguments in the 'Args' list instead .."
 	fi
         init_args=$(echo ${CC_MSG} | sed 's/^\s*{\s*\("Args"\s*:.*\)$/{"Function":"__init", \1/i')
-        try $RUN  ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c "${init_args}" --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+        try $RUN  ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c "${init_args}" --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
     fi
 
     # - exit
@@ -201,13 +201,13 @@ ondemand_setup() {
 	fi
 
         # - setup internal ecc state, e.g., register chaincode
-        try $RUN ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__setup", "'${ERCC_ID}'"]}' --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+        try $RUN ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__setup", "'${ERCC_ID}'"]}' --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
 
 	# - remember we setup this chaincode on this peer ..
 	try touch ${setup_file}
 
         # - retrieve public-key (just for fun of it ...)
-        try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__getEnclavePk"]}' --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+        try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__getEnclavePk"]}' --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
     fi
 }
 
@@ -344,7 +344,7 @@ handle_channel_join() {
 	try rm "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator"
     fi
     #   - get SPID (mostly as debug output)
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
 
     sleep 3
 
@@ -352,7 +352,7 @@ handle_channel_join() {
     #   IMPORTANT: right now a join is _not_ persistant, so on restart of peer,
     #   it will re-join old channels but tlcc will not!
     say "Attaching TLCC to channel '${CHANNEL_NAME}' ..."
-    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
+    try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n tlcc -c '{"Args": ["JOIN_CHANNEL"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
 
 
     # - exit
