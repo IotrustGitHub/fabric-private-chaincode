@@ -155,7 +155,7 @@ handle_chaincode_instantiate() {
 	    die "'function' not supported for init arguments, put all arguments in the 'Args' list instead .."
 	fi
         init_args=$(echo ${CC_MSG} | sed 's/^\s*{\s*\("Args"\s*:.*\)$/{"Function":"__init", \1/i')
-        try $RUN  ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c "${init_args}" --waitForEvent
+        try $RUN  ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c "${init_args}" --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
     fi
 
     # - exit
@@ -201,13 +201,13 @@ ondemand_setup() {
 	fi
 
         # - setup internal ecc state, e.g., register chaincode
-        try $RUN ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__setup", "'${ERCC_ID}'"]}' --waitForEvent
+        try $RUN ${FABRIC_BIN_DIR}/peer chaincode invoke -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__setup", "'${ERCC_ID}'"]}' --waitForEvent --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
 
 	# - remember we setup this chaincode on this peer ..
 	try touch ${setup_file}
 
         # - retrieve public-key (just for fun of it ...)
-        try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__getEnclavePk"]}'
+        try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -o ${ORDERER_ADDR} -C ${CHAN_ID} -n ${CC_NAME} -c '{"Args":["__getEnclavePk"]}' --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem
     fi
 }
 
