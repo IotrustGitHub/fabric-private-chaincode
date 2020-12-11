@@ -24,7 +24,31 @@ is used. Otherwise it will use `core.yaml` and the regular peer image.
 `$PEER_CMD` must also be set to the location of binary or script that will start
  the peer.  **Docker version 17.06.2-ce or higher is needed**
 
-## Steps
+## Starting the network
+
+### Quick start
+   The quickest way to get up and running is to simply execute
+   ```
+   scripts/start.sh
+   ```
+   This will create all necessary installation artifacts and start the
+   network. 
+   If your environment variable `SGX_MODE` is set to hardware, the network will run
+   the peer also with SGX hardware mode enabled, otherwise it will run in SGX simulation mode.
+   If you set the environment variable `USE_EXPLORER` to `true`, the network will include
+   and start the [Hyperledger Explorer](https://www.hyperledger.org/projects/explorer) on 
+   [port 8090](http://localhost:8090). This will enable you to inspect the networks, 
+    e.g., processed transactions.
+   If you set the environment variable `USE_COUCHDB` to `true`, the peer will use couchdb
+   to store the local version of the ledger and you can inspect the peer's ledger state
+   on [port 5984](http://localhost:5984) (login as user `admin` with password `adminPassword`).
+
+   For more information in the steps involved, continue
+   reading the following section. Otherwise, you can skip to the
+   Section on [Chaincode Installation](#deploying-your-fpc-chaincode).
+
+
+### Detailed Steps
 1. Build the peer image in `utils/docker/peer` directory which is defined by the
    peer [Dockerfile](../docker/peer/Dockerfile). This step
    assumes you have already built the [fabric-private-chaincode base image](../docker/base/Dockerfile).
@@ -39,10 +63,10 @@ is used. Otherwise it will use `core.yaml` and the regular peer image.
    By default the image will clone the master branch on
    https://github.com/hyperledger-labs/fabric-private-chaincode. If you want to use
    a different fork of the repo or a different branch you provide
-   `FPC_REPO_URL` and `FPC_REPO_BRANCH` as build args.
+   `FPC_REPO_URL` and `FPC_REPO_BRANCH_TAG_OR_COMMIT` as build args.
    ```
    cd $FPC_PATH/utils/docker/peer
-   docker build -t hyperledger/fabric-peer-fpc --build-arg FPC_REPO_URL=<repo-url> --build-arg FPC_REPO_BRANCH=<repo-branch> .
+   docker build -t hyperledger/fabric-peer-fpc --build-arg FPC_REPO_URL=<repo-url> --build-arg FPC_REPO_BRANCH_TAG_OR_COMMIT=<repo-branch> .
    ```
    If you want to build the peer image using your local copy of your repo you can
    use the same build args, but specify `file:///tmp/build-src/.git` as the
@@ -50,7 +74,7 @@ is used. Otherwise it will use `core.yaml` and the regular peer image.
    so that the local repo will be in the build context for the docker daemon.
    ```
    cd $FPC_PATH
-   docker build -t hyperledger/fabric-peer-fpc -f utils/docker/peer/Dockerfile --build-arg FPC_REPO_URL=file:///tmp/build-src/.git --build-arg FPC_REPO_BRANCH=$(git rev-parse --abbrev-ref HEAD) .
+   docker build -t hyperledger/fabric-peer-fpc -f utils/docker/peer/Dockerfile --build-arg FPC_REPO_URL=file:///tmp/build-src/.git --build-arg FPC_REPO_BRANCH_TAG_OR_COMMIT=$(git rev-parse HEAD) .
    ```
    Note: as this last scenario might be a common development action, it is defined as
    a makefile target `peer` in `$FPC_PATH/utils/docker/Makefile`.
@@ -91,15 +115,19 @@ is used. Otherwise it will use `core.yaml` and the regular peer image.
    ```
    scripts/start.sh
    ```
-   **Note** that the script returns to you an export statements with environment variables
-   which enable you to easily run `docker-compose` commands such as `ps`, `top`, `logs`
-   and alike. Just copy/paste the export statement into your shell and you can get,
-   e.g., the container status with `${DOCKER_COMPOSE} ps`.
+   **Note**
+   - if some of steps 1 to 3 were omitted before running start.sh, the
+     script will perform the missing steps in the default configuration
+   - the script returns to you an export statements with environment variables
+     which enable you to easily run `docker-compose` commands such as `ps`, `top`, `logs`
+     and alike. Just copy/paste the export statement into your shell and you can get,
+     e.g., the container status with `${DOCKER_COMPOSE} ps`.
 
 ## Deploying your FPC Chaincode
-The [examples](../../examples) directory has been [mounted](base/base.yaml) into
- the peer container for convenience, under
- `/project/src/github.com/hyperledger-labs/fabric-private-chaincode/examples`.
+The [examples](../../examples) and [demo](../../demo) directories has been
+[mounted](base/base.yaml) into the peer container for convenience, under
+`/project/src/github.com/hyperledger-labs/fabric-private-chaincode/examples` and
+`/project/src/github.com/hyperledger-labs/fabric-private-chaincode/demo`.
  **NOTE** If you are running a normal fabric network, the rest of the tutorial
  will not work.
 
@@ -127,8 +155,8 @@ The [examples](../../examples) directory has been [mounted](base/base.yaml) into
         PEER_CMD=${PEER_CMD}\
         CORE_PEER_MSPCONFIGPATH=${CORE_PEER_MSPCONFIGPATH}
    ```
-   Note that to safe you to explicitly having to specify CORE_PEER_MSPCONFIGPATH on each call, we defined them
-   in `docker-compose.yml' as admin credentials. This means though also that your peer will run with admin 
+   Note that to save you from explicitly having to specify CORE_PEER_MSPCONFIGPATH on each call, we defined them
+   in `docker-compose.yml` as admin credentials. This means though also that your peer will run with admin
    instead of peer credentials. If you have role-specific endorsement policies, you might have to comment out the
    corresponding definition in [docker-compose.yml](./network-config/docker-compose.yml) to peer credentials and then manually
    define the corresponding value here in the docker exec shell.
@@ -251,4 +279,3 @@ commands in the peer container before you can use these node sdk scripts**
    ```
    scripts/teardown.sh
    ```
-   

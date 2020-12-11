@@ -7,11 +7,15 @@ include $(TOP)/build.mk
 
 CC_NAME = auction_mock_chaincode
 DOCKER_IMAGE = auction_mock_backend
-APP_SRC = ${PWD}
 
 run-go:
-	$(GO) run .
+	env LD_LIBRARY_PATH=../../../../ecc_enclave/_build/lib:${LD_LIBRARY_PATH} $(GO) run .
 
-run-fpc:
+run-fpc: build
+	env LD_LIBRARY_PATH=../../../../ecc_enclave/_build/lib:${LD_LIBRARY_PATH} ./mock --debug
+
+build:
 	$(GO) build -tags fpc
-	./mock
+
+clean:
+	rm -rf mock enclave

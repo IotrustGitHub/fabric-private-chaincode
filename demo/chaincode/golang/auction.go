@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	cid "github.com/hyperledger/fabric/core/chaincode/shim/ext/cid"
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
 
@@ -24,7 +25,7 @@ func storeAuctionStatus(stub shim.ChaincodeStubInterface, auctionId int, status 
 		return fmt.Errorf("json error: %s", err)
 	}
 
-	key := auctionKeyPrefix + string(auctionId) + auctionStatusKeyPostfix
+	key := fmt.Sprintf("%s%d%s", auctionKeyPrefix, auctionId, auctionStatusKeyPostfix)
 	err = stub.PutState(key, statusJson)
 	if err != nil {
 		return fmt.Errorf("putState error: %s", err)
@@ -34,7 +35,7 @@ func storeAuctionStatus(stub shim.ChaincodeStubInterface, auctionId int, status 
 }
 
 func fetchAuctionStatus(stub shim.ChaincodeStubInterface, auctionId int) (*AuctionStatus, error) {
-	key := auctionKeyPrefix + string(auctionId) + auctionStatusKeyPostfix
+	key := fmt.Sprintf("%s%d%s", auctionKeyPrefix, auctionId, auctionStatusKeyPostfix)
 	auctionStatusJson, err := stub.GetState(key)
 	if err != nil {
 		return nil, fmt.Errorf("getState error: %s", err)
@@ -54,7 +55,7 @@ func fetchAuctionStatus(stub shim.ChaincodeStubInterface, auctionId int) (*Aucti
 }
 
 func fetchAuctionDetails(stub shim.ChaincodeStubInterface, auctionId int) (*Auction, error) {
-	key := auctionKeyPrefix + string(auctionId)
+	key := fmt.Sprintf("%s%d", auctionKeyPrefix, auctionId)
 	auctionJson, err := stub.GetState(key)
 	if err != nil {
 		return nil, fmt.Errorf("getState error: %s", err)
@@ -81,14 +82,34 @@ func createAuction(stub shim.ChaincodeStubInterface, args []string) pb.Response 
 	}
 
 	// assign owner
-	auction.Owner = &Principle{[]byte("auctioneeer@org4"), "auctioneeer"}
+	clientIdentity, err := cid.New(stub)
+	if err != nil {
+		return shim.Error("clientidentity constructor error: " + err.Error())
+	}
+
+	ownerMSPId, err := clientIdentity.GetMSPID()
+	if err != nil {
+		return shim.Error("GetMSPID error: " + err.Error())
+	}
+	// Note: as we require x509, we use this instead of GetID()
+	// which would be more generic but creates a more complicated
+	// non-standard encoding (base64-encoding of concatation
+	// of 'x509::' and DN ..
+	ownerCert, err := clientIdentity.GetX509Certificate()
+	if err != nil {
+		return shim.Error("GetX509Certificate error: " + err.Error())
+	}
+	ownerDN := ownerCert.Subject.String()
+
+	auction.Owner = &Principal{ownerMSPId, ownerDN}
+	logger.Info(fmt.Sprintf("CreateAuction: new owner mspid='%v', dn='%v')\n", ownerMSPId, ownerDN))
 
 	auctionJson, err := json.Marshal(auction)
 	if err != nil {
 		return shim.Error("json error: " + err.Error())
 	}
 
-	key := auctionKeyPrefix + string(request.AuctionId)
+	key := fmt.Sprintf("%s%d", auctionKeyPrefix, request.AuctionId)
 	err = stub.PutState(key, auctionJson)
 	if err != nil {
 		return shim.Error("PutState error: " + err.Error())
