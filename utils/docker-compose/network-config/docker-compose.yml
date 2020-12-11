@@ -247,9 +247,10 @@ services:
     extends:
       file: base/base.yaml
       service: peer-base
-    image: hyperledger/fabric-peer${FPC_CONFIG}:${FPC_VERSION}
+    image: hyperledger/fabric-peer-fpc-hw:${FPC_VERSION}
     container_name: peer0.org1.example.com
     environment:
+      - SGX_MODE=HW
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
@@ -265,6 +266,8 @@ services:
       - 7051:7051
       - 7053:7053
     volumes:
+      - ${SGX_CONFIG_ROOT:-../../../config/ias/}:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/
+      - /var/run/aesmd:/var/run/aesmd
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
@@ -281,14 +284,17 @@ services:
       - orderer6.example.com
     networks:
       - basic
+    devices:
+      - ${SGX_DEVICE_PATH:-/dev/isgx}:${SGX_DEVICE_PATH:-/dev/isgx}
 
   peer1.org1.example.com:
     extends:
       file: base/base.yaml
       service: peer-base
-    image: hyperledger/fabric-peer${FPC_CONFIG}:${FPC_VERSION}
+    image: hyperledger/fabric-peer-fpc-hw:${FPC_VERSION}
     container_name: peer1.org1.example.com
     environment:
+      - SGX_MODE=HW
       - CORE_PEER_ID=peer1.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
@@ -304,6 +310,8 @@ services:
       - 7061:7051
       - 7063:7053
     volumes:
+      - ${SGX_CONFIG_ROOT:-../../../config/ias/}:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/
+      - /var/run/aesmd:/var/run/aesmd
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
@@ -320,3 +328,5 @@ services:
       - orderer6.example.com
     networks:
       - basic
+    devices:
+      - ${SGX_DEVICE_PATH:-/dev/isgx}:${SGX_DEVICE_PATH:-/dev/isgx}
