@@ -16,7 +16,7 @@
 #                          `/project/src/github.com/hyperledger-labs/fabric-private-chaincode/fabric/bin/peer.sh`
 
 #
-version: '2'
+version: '2.1'
 
 services:
   peer-base:
@@ -28,14 +28,18 @@ services:
       - DOCKER_HOST=unix:///host/var/run/docker.sock
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric
       - FABRIC_LOGGING_SPEC=info
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - PEER_CMD=${PEER_CMD}
       - CHANNEL_NAME=${CHANNEL_NAME}
     working_dir: /etc/hyperledger/configtx
     command: ${PEER_CMD} node start
     volumes:
         - /var/run/:/host/var/run/
-        - ../config:/etc/hyperledger/configtx
-        - ../../../../examples:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/examples
+        # Note: var run is required for docker daemon socket, see above DOCKER_HOST 
+        # and CORE_VM_ENDPOINT
+        - ${DOCKERD_NETWORK_CONFIG}/config:/etc/hyperledger/configtx
+        - ${DOCKERD_FPC_PATH}/examples:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/examples
+        - ${DOCKERD_FPC_PATH}/demo:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/demo
 
   ca-base:
     image: hyperledger/fabric-ca

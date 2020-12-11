@@ -12,12 +12,40 @@ export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && p
 
 . ${SCRIPT_DIR}/lib/common.sh
 
-# test that we have generated crypto-config. Otherwise below up
-# will create empty files as root which is a PITA if you are running
-# this as non-root
+# test pre-conditions and try to remediate
+#
+if [[ ! $USE_FPC = false ]]; then
+    # - existance of FPC peer
+    FPC_PEER_NAME="hyperledger/fabric-peer-fpc$(if [ "${SGX_MODE}" = "HW" ]; then echo "-hw"; fi):${FPC_VERSION}" 
+    if [ -z "$(docker images -q ${FPC_PEER_NAME})" ]; then
+	echo "FPC peer container image '${FPC_PEER_NAME}' does not exist, try to build it ..."
+	# if it doesn't exist, build it: note this can take quite some time!!
+	pushd "${FPC_PATH}/utils/docker" || die "can't go to peer build location"
+	make SGX_MODE=${SGX_MODE} peer || die "can't build peer"
+	popd
+    fi
+    # - existance of boilerplate
+    BOILERPLATE_NAME="hyperledger/fabric-private-chaincode-boilerplate-ecc$(if [ "${SGX_MODE}" = "HW" ]; then echo "-hw"; fi):${FPC_VERSION}"
+    if [ -z "$(docker images -q ${BOILERPLATE_NAME})" ]; then
+	echo "FPC boilerplate container image '${BOILERPLATE_NAME}' does not exist, try to build it ..."
+	pushd "${FPC_PATH}/" || die "can't go to fpc-sdk and boilerplate build location"
+	make SGX_MODE=${SGX_MODE} fpc-sdk || die "can't build fpc sdk"
+	popd
+	pushd "${FPC_PATH}/utils/docker" || die "can't go to docker build location"
+	make SGX_MODE=${SGX_MODE} || die "can't build docker base images"
+	popd
+	pushd "${FPC_PATH}/ecc" || die "can't go to fpc-sdk and boilerplate build location"
+	make SGX_MODE=${SGX_MODE} docker-boilerplate-ecc || die "can't build boilerplate"
+	popd
+    fi
+fi
+# - generated crypto-config files
+#   test that we have generated crypto-config. Otherwise below up
+#   will create empty files as root which is a PITA if you are running
+#   this as non-root
 if [ ! -d "${NETWORK_CONFIG}/crypto-config/ordererOrganizations" ]; then
-	echo "ERROR: crypto config does not exist; run 'generate.sh'" 1>&2
-	exit 1
+    echo "Could not find crypto configuration, try to generate it..."
+    "${FPC_PATH}/utils/docker-compose/scripts/generate.sh"
 fi
 
 
@@ -44,7 +72,7 @@ ${DOCKER_COMPOSE} ps
 
 # wait for Hyperledger Fabric to start
 # incase of errors when running later commands, issue export FABRIC_START_TIMEOUT=<larger number>
-export FABRIC_START_TIMEOUT=10
+export FABRIC_START_TIMEOUT=20
 sleep ${FABRIC_START_TIMEOUT}
 
 # Create the channel
