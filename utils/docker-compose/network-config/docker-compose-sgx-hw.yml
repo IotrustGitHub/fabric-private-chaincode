@@ -22,3 +22,17 @@ services:
     environment:
       - SGX_MODE=HW
 
+  peer1.org1.example.com:
+  # ideally we would extend the definition of 'peer-base:' but alas docker-compose
+  # doesn't propagate this to services which 'extend' from peer-base :-(
+    image: hyperledger/fabric-peer-fpc-hw:${FPC_VERSION}
+    # build:
+    #   args:
+    #     SGX_MODE: HW
+    volumes:
+      - ${SGX_CONFIG_ROOT:-../../../config/ias/}:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/
+      - /var/run/aesmd:/var/run/aesmd
+    devices:
+      - ${SGX_DEVICE_PATH:-/dev/isgx}:${SGX_DEVICE_PATH:-/dev/isgx}
+    environment:
+      - SGX_MODE=HW
