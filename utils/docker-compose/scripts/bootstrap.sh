@@ -11,7 +11,7 @@ export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && p
 cd ${SCRIPT_DIR}/..
 
 # if version not passed in, default to latest released version
-export VERSION=1.4.3
+export VERSION=1.4.4
 # if ca version not passed in, default to latest released version
 export CA_VERSION=$VERSION
 # current version of thirdparty images (couchdb, kafka and zookeeper) released
@@ -161,8 +161,8 @@ DOCKER=true
 SAMPLES=true
 BINARIES=true
 
-VERSION=1.4.3 # Fabric Version for Binaries and Images
-CA_VERSION=1.4.3
+VERSION=1.4.4 # Fabric Version for Binaries and Images
+CA_VERSION=1.4.4
 THIRDPARTY_IMAGE_VERSION=0.4.18
 
 export FABRIC_TAG=${FABRIC_TAG:="$VERSION"}
