@@ -1,7 +1,7 @@
 {
 	"network-configs": {
-		"basic-network": {
-			"name": "basic-network",
+		"fabricfpc_basic": {
+			"name": "fabricfpc_basic",
 			"profile": "./connection-profile/basic-network.json"
 		}
 	},

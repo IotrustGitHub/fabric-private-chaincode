@@ -1,12 +1,12 @@
 {
-	"name": "first-network",
+	"name": "fabricfpc_basic",
 	"version": "1.0.0",
 	"client": {
-		"tlsEnable": false,
+		"tlsEnable": true,
 		"adminUser": "admin",
 		"adminPassword": "adminpw",
 		"enableAuthentication": false,
-		"organization": "Org1MSP",
+		"organization": "Org1",
 		"connection": {
 			"timeout": {
 				"peer": {
@@ -19,7 +19,8 @@
 	"channels": {
 		"mychannel": {
 			"peers": {
-				"peer0.org1.example.com": {}
+				"peer0.org1.example.com": {},
+				"peer1.org1.example.com": {}
 			},
 			"connection": {
 				"timeout": {
@@ -33,8 +34,8 @@
 		}
 	},
 	"organizations": {
-		"Org1MSP": {
-			"mspid": "Org1MSP",
+		"Org1": {
+			"mspid": "Org1",
 			"fullpath": true,
 			"adminPrivateKey": {
 				"path": "/tmp/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/admin_sk"
@@ -53,6 +54,16 @@
 			"eventUrl": "grpc://peer0.org1.example.com:7053",
 			"grpcOptions": {
 				"ssl-target-name-override": "peer0.org1.example.com"
+			}
+		},
+		"peer1.org1.example.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+			},
+			"url": "grpc://peer1.org1.example.com:7051",
+			"eventUrl": "grpc://peer1.org1.example.com:7053",
+			"grpcOptions": {
+				"ssl-target-name-override": "peer1.org1.example.com"
 			}
 		}
 	}
