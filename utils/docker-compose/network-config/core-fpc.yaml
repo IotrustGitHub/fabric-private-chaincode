@@ -253,11 +253,11 @@ peer:
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
-            file: /etc/hyperledger/tls/server.key
+            file: /etc/hyperledger/tls/client.key
         # X.509 certificate used for TLS when making client connections.
         # If not set, peer.tls.cert.file will be used instead
         clientCert:
-            file: /etc/hyperledger/tls/server.crt
+            file: /etc/hyperledger/tls/clinet.crt
 
     # Authentication contains configuration parameters related to authenticating
     # client messages
