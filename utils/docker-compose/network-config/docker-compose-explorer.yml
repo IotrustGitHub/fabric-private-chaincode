@@ -38,6 +38,7 @@ services:
       - DATABASE_USERNAME=hppoc
       - DATABASE_PASSWD=password
       - DISCOVERY_AS_LOCALHOST=false
+      - LOG_LEVEL_APP=INFO
     volumes:
       - ${DOCKERD_NETWORK_CONFIG}/explorer/config.json:/opt/explorer/app/platform/fabric/config.json
       - ${DOCKERD_NETWORK_CONFIG}/explorer/connection-profile:/opt/explorer/app/platform/fabric/connection-profile
