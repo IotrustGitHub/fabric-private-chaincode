@@ -269,7 +269,6 @@ services:
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
-      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
       - ${DOCKERD_NETWORK_CONFIG}/core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
     depends_on:
@@ -309,7 +308,6 @@ services:
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
-      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/etc/hyperledger/msp/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
       - ${DOCKERD_NETWORK_CONFIG}/core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
     depends_on:
