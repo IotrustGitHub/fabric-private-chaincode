@@ -50,8 +50,8 @@ Organizations:
         # cross-org gossip communication. Note, this value is only encoded in
         # the genesis block in the Application section context.
         AnchorPeers:
-            - Host: peer0.org1.example.com
-              Port: 7051      
+            - Host: 127.0.0.1
+              Port: 7051
         AdminPrincipal: Role.ADMIN
 
 ################################################################################
