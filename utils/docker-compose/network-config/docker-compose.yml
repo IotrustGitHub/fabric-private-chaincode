@@ -261,7 +261,7 @@ services:
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
     ports:
       - 7051:7051
       - 7053:7053
@@ -300,12 +300,12 @@ services:
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
     ports:
       - 7061:7051
       - 7063:7053
     volumes:
-      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/peer/msp
+      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com:/etc/hyperledger/peer
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
