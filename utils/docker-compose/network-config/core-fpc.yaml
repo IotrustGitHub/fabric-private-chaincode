@@ -231,11 +231,11 @@ peer:
     # not mutual TLS auth. See comments on chaincodeListenAddress for more info
     tls:
         # Require server-side TLS
-        enabled:  true
+        enabled:  false
         # Require client certificates / mutual TLS.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
-        clientAuthRequired: true
+        clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
             file: /etc/hyperledger/tls/server.crt
