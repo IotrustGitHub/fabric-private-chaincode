@@ -256,13 +256,14 @@ services:
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=[peer1.org1.example.com:7051]
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.example.com:7051
       # we set here credentials to admin, so we don't have to explicitly have to set
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
     ports:
       - 7051:7051
       - 7053:7053
@@ -296,13 +297,14 @@ services:
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_GOSSIP_ENDPOINT=peer1.org1.example.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=[peer0.org1.example.com:7051]
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
       # we set here credentials to admin, so we don't have to explicitly have to set
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
     ports:
       - 7061:7051
       - 7063:7053
