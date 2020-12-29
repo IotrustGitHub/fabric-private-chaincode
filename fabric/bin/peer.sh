@@ -343,6 +343,8 @@ handle_channel_join() {
 	try $RUN ${FABRIC_BIN_DIR}/peer chaincode instantiate -n ${ERCC_ID} -v ${ERCC_VERSION} -c '{"args":["init"]}' -C ${CHANNEL_NAME} -V ercc-vscc --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050 
 	sleep 4
 	try rm "${FABRIC_STATE_DIR}/${CHANNEL_NAME}.creator"
+    else
+    sleep 5
     fi
     #   - get SPID (mostly as debug output)
     try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
