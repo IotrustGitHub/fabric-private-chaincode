@@ -352,4 +352,4 @@ services:
       - basic
     depends_on:
      - peer0.org1.example.com
-     - couchdb
+     # - couchdb
