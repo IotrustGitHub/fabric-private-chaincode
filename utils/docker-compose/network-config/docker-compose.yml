@@ -263,7 +263,7 @@ services:
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
     ports:
       - 7051:7051
       - 7053:7053
@@ -304,7 +304,7 @@ services:
       # it in 'docker exec' so we can run ${PEER_CMD}. It means, though, that the peer
       # also will run with admin and not peer credentials. If that gives problems, e.g.,
       # because of role-specific endorsement policies, you will have to comment below
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/peer/msp
     ports:
       - 7061:7051
       - 7063:7053
@@ -324,3 +324,32 @@ services:
       - orderer6.example.com
     networks:
       - basic
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=info
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
+      - CORE_CHAINCODE_KEEPALIVE=10
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+      - /var/run/:/host/var/run/
+      - ${DOCKERD_NETWORK_CONFIG}/config:/etc/hyperledger/configtx
+      - ${DOCKERD_FPC_PATH}/examples:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/examples
+      - ${DOCKERD_FPC_PATH}/demo:/project/src/github.com/hyperledger-labs/fabric-private-chaincode/demo
+      - ${DOCKERD_NETWORK_CONFIG}/crypto-config:/etc/hyperledger/crypto-config
+      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
+      - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
+    networks:
+      - basic
+    depends_on:
+     - peer0.org1.example.com
+     - couchdb
