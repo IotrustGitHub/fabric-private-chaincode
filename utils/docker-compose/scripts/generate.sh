@@ -33,11 +33,11 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com_sk
+cp ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com_sk
 mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/admin_sk
 mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/key.pem
 
-mv ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/key.pem
+cp ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/*_sk ${FABRIC_CFG_PATH}/crypto-config/peerOrganizations/org1.example.com/tlsca/key.pem
 #generate channel configuration transaction
 configtxgen -profile SampleRaftMSPChannel -outputCreateChannelTx ${FABRIC_CFG_PATH}/config/channel.tx -channelID ${CHANNEL_NAME}
 if [ "$?" -ne 0 ]; then
