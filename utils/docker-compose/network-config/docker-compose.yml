@@ -251,6 +251,7 @@ services:
     container_name: peer0.org1.example.com
     environment:
       - SGX_MODE=HW
+      - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051

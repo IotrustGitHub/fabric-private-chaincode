@@ -346,7 +346,8 @@ handle_channel_join() {
   sleep 5
   try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
     else
-  sleep 3
+  sleep 20
+  try $RUN ${FABRIC_BIN_DIR}/peer chaincode query -n ${ERCC_ID} -c '{"args":["getSPID"]}' -C ${CHANNEL_NAME} --tls --cafile /etc/hyperledger/msp/orderer/tlscacerts/tlsca.example.com-cert.pem -o orderer0.example.com:7050
     fi
 
 
