@@ -1,0 +1,4 @@
+api-key: /project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/api_key.txt
+ spid: /project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/spid.txt
+api-key: /project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/api_key.txt
+ spid: /project/src/github.com/hyperledger-labs/fabric-private-chaincode/config/ias/spid.txt

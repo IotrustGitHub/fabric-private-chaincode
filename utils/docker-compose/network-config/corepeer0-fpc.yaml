@@ -40,7 +40,7 @@ peer:
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
-    addressAutoDetect: false
+    addressAutoDetect: true
 
     # Setting for runtime.GOMAXPROCS(n). If n < 1, it does not change the
     # current setting
@@ -108,7 +108,7 @@ peer:
         # see 'externalEndpoint'
         endpoint:
         # Maximum count of blocks stored in memory
-        maxBlockCountToStore: 20
+        maxBlockCountToStore: 100
         # Max time between consecutive message pushes(unit: millisecond)
         maxPropagationBurstLatency: 10ms
         # Max number of messages stored until a push is triggered to remote peers
@@ -137,9 +137,9 @@ peer:
         # Connection timeout(unit: second)
         connTimeout: 2s
         # Buffer size of received messages
-        recvBuffSize: 10
+        recvBuffSize: 1000
         # Buffer size of sending messages
-        sendBuffSize: 10
+        sendBuffSize: 200
         # Time to wait before pull engine processes incoming digests (unit: second)
         # Should be slightly smaller than requestWaitTime
         digestWaitTime: 1s
@@ -323,7 +323,7 @@ peer:
         reconnectTotalTimeThreshold: 3600s
 
         # It sets the delivery service <-> ordering service node connection timeout
-        connTimeout: 10s
+        connTimeout: 3s
 
         # It sets the delivery service maximal delay between consecutive retries
         reConnectBackoffThreshold: 3600s
@@ -480,7 +480,7 @@ vm:
                 Config:
                     max-size: "50m"
                     max-file: "5"
-            Memory: 4294967296
+            Memory: 2147483648
 
 ###############################################################################
 #

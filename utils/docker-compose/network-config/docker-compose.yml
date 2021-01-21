@@ -43,6 +43,7 @@ services:
     container_name: orderer0.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -72,6 +73,7 @@ services:
     container_name: orderer1.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -101,6 +103,7 @@ services:
     container_name: orderer2.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -130,6 +133,7 @@ services:
     container_name: orderer3.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -159,6 +163,7 @@ services:
     container_name: orderer4.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -188,6 +193,7 @@ services:
     container_name: orderer5.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -217,6 +223,7 @@ services:
     container_name: orderer6.example.com
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
+      - GODEBUG=netdns=go
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -250,6 +257,7 @@ services:
     image: hyperledger/fabric-peer-fpc-hw:${FPC_VERSION}
     container_name: peer0.org1.example.com
     environment:
+      - GODEBUG=netdns=go
       - SGX_MODE=HW
       - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=peer0.org1.example.com
@@ -273,7 +281,7 @@ services:
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
-      - ${DOCKERD_NETWORK_CONFIG}/core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
+      - ${DOCKERD_NETWORK_CONFIG}/corepeer0${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
     depends_on:
       - orderer0.example.com
       - orderer1.example.com
@@ -292,6 +300,7 @@ services:
     image: hyperledger/fabric-peer-fpc-hw:${FPC_VERSION}
     container_name: peer1.org1.example.com
     environment:
+      - GODEBUG=netdns=go
       - SGX_MODE=HW
       - CORE_PEER_ID=peer1.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1
@@ -314,7 +323,7 @@ services:
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls:/etc/hyperledger/tls
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
       - ${DOCKERD_NETWORK_CONFIG}/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/etc/hyperledger/msp/orderer
-      - ${DOCKERD_NETWORK_CONFIG}/core${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
+      - ${DOCKERD_NETWORK_CONFIG}/corepeer1${FPC_CONFIG}.yaml:/etc/hyperledger/fabric/core.yaml
     depends_on:
       - orderer0.example.com
       - orderer1.example.com
@@ -331,6 +340,7 @@ services:
     image: hyperledger/fabric-tools
     tty: true
     environment:
+      - GODEBUG=netdns=go
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=info
